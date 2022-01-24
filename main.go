@@ -3,6 +3,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"sync"
@@ -30,12 +31,14 @@ var wg = sync.WaitGroup{}
 
 func main() {
 	switch os.Args[1] {
+	case "help", "Help", "-help", "-Help", "--help", "--Help", "h", "H", "-h", "-H":
+		fmt.Println("Please use one of these command-arguments: order, reset, list")
 	case "order":
 		order()
 	case "reset":
-		//reset()
+		reset()
 	case "list":
-		//list
+		list()
 	}
 }
 func order() {
@@ -82,6 +85,21 @@ func getUserInput() (string, string, string, uint) {
 	fmt.Print("Enter number of tickets: ")
 	fmt.Scan(&userTickets)
 	return firstName, lastName, email, userTickets
+}
+
+func reset() {
+	fmt.Println("Resetting...")
+	os.Remove("bookings.tmp")
+	fmt.Println("Deleted bookings.tmp")
+	os.Remove("remainingTickets.tmp")
+	fmt.Println("Deleted remainingTickets.tmp")
+	fmt.Println("Done!")
+}
+
+func list() {
+	persist.Load("./bookings.tmp", &Bookings)
+	jsonF, _ := json.Marshal(Bookings)
+	fmt.Println(string(jsonF))
 }
 
 func bookTicket(userTickets uint, firstName string, lastName string, email string) {
