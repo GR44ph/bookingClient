@@ -4,6 +4,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"sync"
 	"time"
 
@@ -28,10 +29,19 @@ type UserData struct {
 var wg = sync.WaitGroup{}
 
 func main() {
-
-	greetUsers()
+	switch os.Args[1] {
+	case "order":
+		order()
+	case "reset":
+		//reset()
+	case "list":
+		//list
+	}
+}
+func order() {
 
 	persist.Load("./remainingTickets.tmp", &remainingTickets)
+	greetUsers()
 	firstName, lastName, email, userTickets := getUserInput()
 	isValidName, isValidEmail, isValidUserTicketNumber := helper.ValidateUserInput(firstName, lastName, email, userTickets, remainingTickets)
 
@@ -40,8 +50,6 @@ func main() {
 		bookTicket(userTickets, firstName, lastName, email)
 		wg.Add(1)
 		go sendTicket(userTickets, firstName, lastName, email)
-	} else if userTickets == remainingTickets {
-		fmt.Print("You're about to purchase all the leftover tickets, shame on you (but thanks for giving us money)")
 	} else {
 		if !isValidName {
 			fmt.Println("The first name or last name you've entered is too short (at least 2 characters)")
@@ -59,13 +67,6 @@ func main() {
 func greetUsers() {
 	fmt.Printf("welcome to the %v booking cli\n", conferenceName)
 	fmt.Printf("We have a total of %v tickets and %v remain available.\n", conferenceTickets, remainingTickets)
-}
-func getFirstNames() []string {
-	firstNames := []string{}
-	for _, booking := range Bookings {
-		firstNames = append(firstNames, booking.FirstName)
-	}
-	return firstNames
 }
 func getUserInput() (string, string, string, uint) {
 	var firstName string
