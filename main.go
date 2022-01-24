@@ -29,11 +29,11 @@ type UserData struct {
 
 func main() {
 
+	persist.Load("./remainingTickets.tmp", &remainingTickets)
 	greetUsers()
 
 	for remainingTickets > 0 {
-
-		persist.Load("./remainingTickets.tmp", &remainingTickets)
+		
 		firstName, lastName, email, userTickets := getUserInput()
 		isValidName, isValidEmail, isValidUserTicketNumber := helper.ValidateUserInput(firstName, lastName, email, userTickets, remainingTickets)
 
