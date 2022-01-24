@@ -31,7 +31,7 @@ var wg = sync.WaitGroup{}
 
 func main() {
 	switch os.Args[1] {
-	case "help", "Help", "-help", "-Help", "--help", "--Help", "h", "H", "-h", "-H":
+	default:
 		fmt.Println("Please use one of these command-arguments: order, reset, list")
 	case "order":
 		order()
@@ -101,7 +101,6 @@ func list() {
 	jsonF, _ := json.Marshal(Bookings)
 	fmt.Println(string(jsonF))
 }
-
 func bookTicket(userTickets uint, firstName string, lastName string, email string) {
 	remainingTickets -= userTickets
 
